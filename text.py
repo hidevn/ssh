@@ -13,8 +13,8 @@ passwd = []
 userName = ""
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-if (len(sys.argv) == 1):
-    print("This script must be run with 1 parameter!")
+if (len(sys.argv) == 2):
+    print("This script must be run with 2 parameters!")
     sys.exit(0)
 with open(os.path.join(__location__, sys.argv[1])) as f:
     content = f.readlines()
@@ -39,11 +39,11 @@ for k in range(i, len(content)):
         userName = content[k][16:content[k].index(":")]
         break
 
-print("Process: "+ sys.argv[1][7:])
+print("Process: "+ sys.argv[1][7:]+ " " + sys.argv[2])
 print("Username: " + userName)
 print("Password: " + passwd)
 with open("output.txt", "a") as log:
-    log.write("Process: " + sys.argv[1][7:] + "\n")
+    log.write("Process: " + sys.argv[1][7:] + " " + sys.argv[2] + "\n")
     log.write("Username: " + userName + "\n")
     log.write("Password: "+ passwd + "\n")
     log.write("----------------------------" + "\n")

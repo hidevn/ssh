@@ -5,11 +5,11 @@ if [[ $EUID -ne 0 ]]; then
 fi
 IFS=$'\n'
 oldProcess=()
-echo "This script requires python for strace log parsing."
 echo "Waiting for ssh connection, Ctrl+C to exit"
 while [ 1 ]
 do
 	sleep 0.5
+	# Remove non-running processes from list.
 	for oldP in ${oldProcess[@]}
 	do
 		found=0
@@ -39,13 +39,14 @@ do
 			done
 			if [[ $found == 0 ]]
 				then
-				echo "Process $newP found, working!"
+				cmd=$(ps -p $newP -o args | awk "FNR==2 {print}")
+				echo "Process $newP: '$cmd' found, working!"
 				oldProcess+=($newP)
 				{
 				if strace -etrace=write,read -p $newP -o output-$newP 
 					then
 					chmod 777 output-$newP
-					python text.py output-$newP
+					python text.py output-$newP "$cmd"
 					echo "strace process $newP done!"	
 				else
 					echo "strace process $newP error!" 1>&2
